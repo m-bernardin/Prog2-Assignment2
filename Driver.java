@@ -7,9 +7,10 @@ public class Driver{
     public static void main(String[] args) {
         boolean running=true;
         while(running){
-            System.out.print("Please select an option\n1. Create project\n2. Add scientist\n3. Show all info\n4. Search for a scientist\n5. Remove project\n6. Remove scientist\n7. quit");
-            if(scientists.isEmpty())System.out.println("No scientists registered yet...");
-            if(projects.isEmpty())System.out.println("No projects registered yet...");
+            System.out.print("\nPlease select an option\n1. Create project\n2. Add scientist\n3. Show all info\n4. Search for a scientist\n5. Remove project\n6. Remove scientist\n7. quit\n");
+            if(scientists.isEmpty())System.out.println("<!> No scientists registered yet...");
+            if(projects.isEmpty())System.out.println("<!> No projects registered yet...");
+            System.out.print("> ");
             switch (input.nextInt()) {
                 case 1:
                     createProject();
@@ -53,21 +54,23 @@ public class Driver{
         Scanner projectsInfo=new Scanner(scientistInfo.nextLine()).useDelimiter(";");
         scientistInfo.close();
         while (projectsInfo.hasNext()) {
-            formattedScientist+="\t"+searchProject(projectsInfo.next()).toString();
+            formattedScientist+="\t\t"+searchProject(projectsInfo.next()).toString();
         }
         projectsInfo.close();
         return formattedScientist;
     }
-    private static Project searchProject(String projectID) {
+    private static Project searchProject(String projectName) {
         for (Project project : projects) {
-            if(project.getProjectID().equals(projectID))return project;
+            if(project.getName().equals(projectName))return project;
         }
         return null;
     }
     private static void removeScientist() {
-        System.out.print("Please enter the name of the scientist to remove\n> ");
+        // TODO remove try/catch
+        input.nextLine();
         boolean succesfulRemoval=true;
         try {
+            System.out.print("Please enter the name of the scientist to remove\n> ");
             scientists.remove(searchScientist(input.nextLine()));
         } catch (Exception e) {
             succesfulRemoval=false;
@@ -76,18 +79,19 @@ public class Driver{
         else System.out.println("No such scientist found...");
     }
     private static void removeProject() {
+        // TODO test new verison
+        input.nextLine();
         boolean succesfulRemoval=true;
-        try {
-            projects.remove(searchProject(input.nextLine()));
-        } catch (Exception e) {
-            succesfulRemoval=false;
-        }
+        System.out.print("Please enter the name of the project to remove\n> ");
+        Project project=searchProject(input.nextLine());
+        if(project==null)succesfulRemoval=false;
+        else projects.remove(project);
         if(succesfulRemoval)System.out.println("Project succesfully removed");
         else System.out.println("No such project found...");
     }
-    private static Scientist searchScientist(String scientistID) {
+    private static Scientist searchScientist(String scientistName) {
         for(Scientist scientist:scientists){
-            if(scientist.getScientistID().equals(scientistID))return scientist;
+            if(scientist.getName().equals(scientistName))return scientist;
         }
         return null;
     }
@@ -110,7 +114,10 @@ public class Driver{
         while(gettingID){
             System.out.print("Please enter the project's ID\n> ");
             String tempID=input.next();
-            if(!existingProject(tempID))ID=tempID;
+            if(!existingProject(tempID)){
+                ID=tempID;
+                gettingID=false;
+            }
             else System.out.println("Invalid ID: duplicate");
         }
         projects.add(new Project(ID, name));
@@ -132,12 +139,16 @@ public class Driver{
                     break;
                 }
             }
-            if(valid)ID=tempID;
+            if(valid){
+                ID=tempID;
+                gettingID=false;
+            }
             else System.out.println("Invalid ID: duplicate");
         }
         System.out.print("Please enter the number of projects the scientist has picked up\n> ");
         String projectIDs="";
-        for(int i=0;i<input.nextInt();++i){
+        int nbProjects=input.nextInt();
+        for(int i=0;i<nbProjects;++i){
             System.out.print("Please enter the project's ID\n> ");
             String tempID=input.next();
             if(existingProject(tempID))projectIDs+=tempID+";";
