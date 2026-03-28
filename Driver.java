@@ -66,7 +66,6 @@ public class Driver{
         return null;
     }
     private static void removeScientist() {
-        // TODO remove try/catch
         input.nextLine();
         boolean succesfulRemoval=true;
         try {
@@ -79,7 +78,6 @@ public class Driver{
         else System.out.println("No such scientist found...");
     }
     private static void removeProject() {
-        // TODO test new verison
         input.nextLine();
         boolean succesfulRemoval=true;
         System.out.print("Please enter the name of the project to remove\n> ");
