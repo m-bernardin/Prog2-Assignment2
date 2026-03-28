@@ -15,6 +15,10 @@ public class Driver{
                     createProject();
                     break;
                 case 2:
+                    if(projects.isEmpty()){
+                        System.out.println("Please create a project first...");
+                        break;
+                    }
                     addScientist();
                     break;
                 case 3:
@@ -43,12 +47,25 @@ public class Driver{
         }
     }
     private static String formatScientist(Scientist scientist) {
-        // TODO Auto-generated method stub
-        // format to none found if null
-        throw new UnsupportedOperationException("Unimplemented method 'formatScientist'");
+        if(scientist==null)return "Invalid scientist...";
+        Scanner scientistInfo=new Scanner(scientist.toString());
+        String formattedScientist=scientistInfo.nextLine()+":\n";
+        Scanner projectsInfo=new Scanner(scientistInfo.nextLine()).useDelimiter(";");
+        scientistInfo.close();
+        while (projectsInfo.hasNext()) {
+            formattedScientist+="\t"+searchProject(projectsInfo.next()).toString();
+        }
+        projectsInfo.close();
+        return formattedScientist;
+    }
+    private static Project searchProject(String projectID) {
+        for (Project project : projects) {
+            if(project.getProjectID().equals(projectID))return project;
+        }
+        return null;
     }
     private static void removeScientist() {
-        System.out.println("Please enter the name of the scientist to remove");// TODO
+        System.out.print("Please enter the name of the scientist to remove\n> ");
         boolean succesfulRemoval=true;
         try {
             scientists.remove(searchScientist(input.nextLine()));
@@ -59,13 +76,20 @@ public class Driver{
         else System.out.println("No such scientist found...");
     }
     private static void removeProject() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeProject'");
+        boolean succesfulRemoval=true;
+        try {
+            projects.remove(searchProject(input.nextLine()));
+        } catch (Exception e) {
+            succesfulRemoval=false;
+        }
+        if(succesfulRemoval)System.out.println("Project succesfully removed");
+        else System.out.println("No such project found...");
     }
     private static Scientist searchScientist(String scientistID) {
-        // TODO Auto-generated method stub
-        // return null if none found
-        throw new UnsupportedOperationException("Unimplemented method 'search'");
+        for(Scientist scientist:scientists){
+            if(scientist.getScientistID().equals(scientistID))return scientist;
+        }
+        return null;
     }
     private static void displayInfo() {
         System.out.println("Scientists:");

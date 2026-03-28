@@ -27,6 +27,6 @@ public class Scientist{
     }
     @Override
     public String toString() {
-        return scientistID+": "+name+", on projects\n"+projectIDs;
+        return scientistID+": "+name+", on projects\n"+projectIDs+"\n";
     }
 }
